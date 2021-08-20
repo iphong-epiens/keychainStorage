@@ -22,7 +22,7 @@ struct KeychainStorage<T: Codable>: DynamicProperty {
     self.key = key
     var initialValue = wrappedValue
     do {
-      try Keychain(service: keychainId).get(key) {
+      try Keychain(service: keychainId).accessibility(.afterFirstUnlock).get(key) {
         attributes in
         if let attributes = attributes, let data = attributes.data {
           do {
@@ -46,7 +46,7 @@ struct KeychainStorage<T: Codable>: DynamicProperty {
       value = newValue
       do {
         let encoded = try JSONEncoder().encode(value)
-        try Keychain(service: keychainId).set(encoded, key: key)
+        try Keychain(service: keychainId).accessibility(.afterFirstUnlock).set(encoded, key: key)
       } catch let error {
         fatalError("\(error)")
       }
