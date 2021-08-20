@@ -17,13 +17,13 @@ struct ContentView: View {
     @KeychainStorage("MyKey") var savedValue = MyType(string: "Hello")
     @KeychainStorage("MyKey") var savedValue2: MyType?
     
-    init() {
-        do {
-            try Keychain().remove("MyKey")
-        } catch  {
-            print(error.localizedDescription)
-        }
-    }
+//    init() {
+//        do {
+//            try Keychain().remove("MyKey")
+//        } catch  {
+//            print(error.localizedDescription)
+//        }
+//    }
     
     var body: some View {
         VStack {
