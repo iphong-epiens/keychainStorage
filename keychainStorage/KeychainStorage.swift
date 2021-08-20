@@ -5,21 +5,24 @@
 //  Created by Inpyo Hong on 2021/08/20.
 //
 
-
 import SwiftUI
 import KeychainAccess
+
+// reference: https://betterprogramming.pub/build-a-secure-swiftui-property-wrapper-for-the-keychain-e0f8e39d554b
 
 @propertyWrapper
 struct KeychainStorage<T: Codable>: DynamicProperty {
   typealias Value = T
   let key: String
   @State private var value: Value?
-  
+
+  let keychainId = Bundle.main.bundleIdentifier!
+
   init(wrappedValue: Value? = nil, _ key: String) {
     self.key = key
     var initialValue = wrappedValue
     do {
-      try Keychain().get(key) {
+      try Keychain(service: keychainId).get(key) {
         attributes in
         if let attributes = attributes, let data = attributes.data {
           do {
@@ -43,7 +46,7 @@ struct KeychainStorage<T: Codable>: DynamicProperty {
       value = newValue
       do {
         let encoded = try JSONEncoder().encode(value)
-        try Keychain().set(encoded, key: key)
+        try Keychain(service: keychainId).set(encoded, key: key)
       } catch let error {
         fatalError("\(error)")
       }
